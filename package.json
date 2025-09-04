@@ -1,6 +1,6 @@
 {
   "name": "typescript-a2s",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "TypeScript library to query Source and GoldSource servers using Valve's Server Query Protocol",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
