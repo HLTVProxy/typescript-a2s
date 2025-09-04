@@ -100,12 +100,12 @@ import { A2SClient } from 'typescript-a2s';
 const client = new A2SClient('127.0.0.1', 27015, 5000, 'utf-8');
 
 try {
-  // Perform multiple queries efficiently
-  const [serverInfo, playerList, serverRules] = await Promise.all([
-    client.info(),
-    client.players(),
-    client.rules(),
-  ]);
+  // Do NOT use Promise.all with a single A2SClient instance!
+  // The A2S protocol and UDP socket are not concurrency-safe.
+  // Always await each query sequentially to avoid protocol errors.
+  const serverInfo = await client.info();
+  const playerList = await client.players();
+  const serverRules = await client.rules();
 
   console.log('Query results:', {
     server: serverInfo.serverName,
@@ -281,6 +281,8 @@ import { info, players, rules } from 'typescript-a2s';
 
 async function monitorServer(address: string, port: number) {
   try {
+    // This is safe because info() and players() are stateless functions.
+    // Do NOT use Promise.all with a single A2SClient instance!
     const [serverInfo, playerList] = await Promise.all([
       info(address, port),
       players(address, port),
